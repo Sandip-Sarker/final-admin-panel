@@ -45,7 +45,7 @@
                                         <button type="submit" class="btn btn-primary w-100">Submit</button>
                                     </div>
                                     <div class="text-center mt-4">
-                                        <p class="text-dark mb-0">Forgot It?<a class="text-primary ms-1" href="#">Send me Back</a></p>
+                                        <p class="text-dark mb-0">Forgot It?<a class="text-primary ms-1" href="{{ url()->previous() }}">Send me Back</a></p>
                                     </div>
                                 </div>
 

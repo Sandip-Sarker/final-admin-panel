@@ -48,11 +48,37 @@ class VerifyOtpController extends Controller
         }
 
     }
+
+    public function resendOtpEmail(Request $request)
+    {
+        try {
+            $email  = $request->input('email');
+            $otp    = rand(100000, 999999);
+
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                return redirect()->back()->withErrors(['error' => 'Email not found']);
+            }
+
+            Mail::to($email)->send(new EmailOTPMail($otp));
+
+            $user->otp = $otp;
+            $user->save();
+
+            return redirect()->back()->with(['message' => 'OTP sent successfully']);
+
+        }catch (\Exception $exception){
+            return $exception->getMessage();
+        }
+    }
+
     public function verifyOtpPage()
     {
         $data['title'] = 'Verify OTP';
         return view('auth.verify-otp')->with($data);
     }
+
     public function verifyOtp(Request $request)
     {
 

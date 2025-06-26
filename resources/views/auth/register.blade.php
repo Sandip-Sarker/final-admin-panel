@@ -19,6 +19,16 @@
                                         <span class="login100-form-title">
                                             Registration
                                         </span>
+                            {{-- Error Showing --}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             {{-- Name  --}}
                             <div class="wrap-input100 validate-input" data-bs-validate = "Valid email is required: ex@abc.xyz">
                                 <input class="input100" type="text" name="name" value="{{old('name')}}" placeholder="User name">

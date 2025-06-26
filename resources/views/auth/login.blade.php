@@ -6,7 +6,7 @@
         <div>
             <!-- CONTAINER OPEN -->
             <div class="col col-login mx-auto text-center">
-                <a href="index.html" class="text-center">
+                <a href="#" class="text-center">
                     <img src="{{asset('/')}}assets/images/brand/logo.png" class="header-brand-img" alt="">
                 </a>
             </div>
@@ -19,7 +19,7 @@
 
                             {{-- Email --}}
                             <div class="wrap-input100 validate-input" data-bs-validate = "Valid email is required: ex@abc.xyz">
-                                <input class="input100" type="email" name="email" {{old('email')}} placeholder="Email">
+                                <input class="input100" type="email" name="email" value="{{old('email')}}" placeholder="Email">
                                 <span class="focus-input100"></span>
                                 <span class="symbol-input100">
 											<i class="zmdi zmdi-email" aria-hidden="true"></i>

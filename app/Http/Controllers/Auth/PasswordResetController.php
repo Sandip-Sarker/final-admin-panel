@@ -19,7 +19,7 @@ class PasswordResetController extends Controller
     {
 
         $request->validate([
-            'new_password'  => 'required|min:8|confirmed',
+            'new_password'  => 'required|min:6|confirmed',
         ]);
 
         $user = User::where('email', $request->email)->first();
