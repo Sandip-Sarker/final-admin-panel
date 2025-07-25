@@ -16,3 +16,7 @@
 <!-- INTERNAL Switcher css -->
 <link href="{{asset('/')}}assets/switcher/css/switcher.css" rel="stylesheet">
 <link href="{{asset('/')}}assets/switcher/demo.css" rel="stylesheet">
+
+
+<link href="{{asset('/')}}assets/css/toastify.min.css" rel="stylesheet">
+<link href="{{asset('/')}}assets/css/progress.css" rel="stylesheet">

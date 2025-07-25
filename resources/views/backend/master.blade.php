@@ -7,6 +7,7 @@
 
     <!-- style-->
     @include('backend.partial.style')
+
 </head>
 
 <body class="ltr app sidebar-mini">
@@ -54,6 +55,7 @@
     <!-- page -->
 
     @include('backend.partial.script')
+
 
 </body>
 </html>
