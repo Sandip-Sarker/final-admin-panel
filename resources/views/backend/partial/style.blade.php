@@ -20,3 +20,5 @@
 
 <link href="{{asset('/')}}assets/css/toastify.min.css" rel="stylesheet">
 <link href="{{asset('/')}}assets/css/progress.css" rel="stylesheet">
+
+<script src="{{asset('/')}}assets/js/axios.min.js"></script>

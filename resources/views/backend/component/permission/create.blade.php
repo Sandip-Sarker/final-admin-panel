@@ -29,7 +29,7 @@
                     <div class="table-responsive deleted-table">
 {{--                        <button id="button" class="btn btn-primary float-end mb-4 data-table-btn">Delete selected row</button>--}}
 {{--                        <table id="delete-datatable" class="table table-bordered text-nowrap border-bottom">--}}
-                        <table class="table table-bordered text-nowrap border-bottom">
+                        <table class="table table-bordered text-nowrap border-bottom" id="tableData">
                             <thead>
                             <tr>
                                 <th class="border-bottom-0">SL NO</th>
@@ -37,7 +37,7 @@
                                 <th class="border-bottom-0">Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tableList">
 
                             </tbody>
                         </table>
@@ -70,40 +70,37 @@
     <!-- End Row -->
 
 
-
     <script>
+        getUser();
 
-
-        async function getList() {
+        async function getUser() {
             try {
-                let response = await axios.get("/admin/permission/list");
-                if (response.data.success && response.data.code === 200) {
-                    const permissions = response.data.data;
-                    const tbody = document.querySelector('table tbody');
-                    tbody.innerHTML = ''; // Clear existing rows
+                const response = await axios.get('/admin/permission/list');
+                // console.log(response)
+                let tableList = $('#tableList');
+                tableList.empty();
 
-                    permissions.forEach((permission, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${permission.name}</td>
-                        <td>
-                            <!-- Example Action buttons -->
-                            <button class="btn btn-sm btn-warning" onclick="editPermission(${permission.id})">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="deletePermission(${permission.id})">Delete</button>
-                        </td>
-                    `;
-                        tbody.appendChild(row);
-                    });
-                } else {
-                    errorToast(response.data.message || 'Failed to fetch permissions');
-                }
+                response.data.data.forEach(function (item, index) {
+                    let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>
+                        <button data-id="${item.id}" class="btn editBtn btn-sm btn-outline-success">Edit</button>
+                        <button data-id="${item.id}" class="btn deleteBtn btn-sm btn-outline-danger">Delete</button>
+                    </td>
+                </tr>`;
+                    tableList.append(row);
+                });
+
             } catch (error) {
-                console.error(error);
-                errorToast('Error fetching permissions');
+                console.error("Axios error:", error);
             }
         }
+    </script>
 
+
+
+    <script>
         {{-- Store Data --}}
         document.getElementById('permissionForm').addEventListener('submit', async function (event){
             event.preventDefault();

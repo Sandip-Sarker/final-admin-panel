@@ -7,7 +7,7 @@
 
     <!-- style-->
     @include('backend.partial.style')
-
+{{--    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>--}}
 </head>
 
 <body class="ltr app sidebar-mini">

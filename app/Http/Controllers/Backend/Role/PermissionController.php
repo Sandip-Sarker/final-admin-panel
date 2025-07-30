@@ -17,8 +17,9 @@ class PermissionController extends Controller
         return view('backend.component.permission.create')->with($data);
     }
 
-    public function permissionList()
+    public function permissionList(Request $request)
     {
+
         $permissions = Permission::latest()->get();
 
         if ($permissions->count() > 0) {
