@@ -60,7 +60,7 @@
                                 <input class="form-control" name="name" id="name" placeholder="Enter Permission Name" type="text">
                             </div>
 
-                            <button type="submit" class="btn ripple w-100 btn-primary">Save</button>
+                            <button type="submit" class="btn addBtn btn-outline-primary w-100">Save</button>
                         </form>
                     </div>
                 </div>
@@ -70,6 +70,7 @@
     <!-- End Row -->
 
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         getUser();
 
@@ -95,10 +96,47 @@
             } catch (error) {
                 console.error("Axios error:", error);
             }
+
+
+            //delete
+            $('.deleteBtn').on('click', async function () {
+
+                let id = $(this).data('id')
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            let response = await axios.delete(`/admin/permission/delete/${id}`);
+                            console.log(response)
+                            if (response.data.success) {
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "The item has been deleted.",
+                                    icon: "success"
+                                }).then(() => {
+                                    // Optionally remove the row from table or reload
+                                     getUser() // or $(this).closest('tr').remove();
+                                });
+                            } else {
+                                Swal.fire("Error!", "Something went wrong.", "error");
+                            }
+                        } catch (error) {
+                            Swal.fire("Error!", "Deletion failed.", "error");
+                            console.error(error);
+                        }
+                    }
+                });
+            })
         }
     </script>
-
-
 
     <script>
         {{-- Store Data --}}
@@ -110,10 +148,7 @@
             if (name.length === 0){
                 errorToast('Name is required');
             }else{
-
                 let response  = await axios.post("permission/store",{name:name})
-
-
                 if (response.data.success === true && response.data.code === 200){
                     successToast('Permission Created Successfully');
                     this.reset();
@@ -124,9 +159,6 @@
             }
         });
     </script>
-
-
-
 
 
 @endsection

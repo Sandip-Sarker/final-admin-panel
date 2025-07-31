@@ -72,4 +72,5 @@
 <script src="{{asset('/')}}assets/js/my.js"></script>
 
 
-
+<!-- Sweet Alert js -->
+<script src="{{asset('/')}}assets/js/sweetalert2@11"></script>

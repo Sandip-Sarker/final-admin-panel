@@ -29,7 +29,6 @@ class PermissionController extends Controller
         }
     }
 
-
     public function store(Request $request)
     {
 
@@ -47,5 +46,17 @@ class PermissionController extends Controller
             return $this->errorResponse(false,'Permission not created.', 404, null);
         }
 
+    }
+
+    public function destroy($id)
+    {
+        $permission = Permission::find($id);
+
+        if ($permission) {
+            $permission->delete();
+            return $this->successResponse(true,'Permission deleted successfully.', 200, $permission);
+        }else{
+            return $this->errorResponse(false,'Permission not found.', 200, null);
+        }
     }
 }
