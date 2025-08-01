@@ -48,6 +48,17 @@ class PermissionController extends Controller
 
     }
 
+
+    public function edit($id)
+    {
+        $permission = Permission::find($id);
+        if ($permission) {
+            return $this->successResponse(true, 'Permission get successfully.', 200, $permission);
+        }else {
+            return $this->errorResponse(false, 'Permission not found.', 404, []);
+        }
+    }
+
     public function destroy($id)
     {
         $permission = Permission::find($id);

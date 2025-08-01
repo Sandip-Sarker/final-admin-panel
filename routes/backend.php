@@ -19,6 +19,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/permission', 'index')->name('permission.index');
             Route::get('/permission/list', 'permissionList')->name('permission.list');
             Route::post('/permission/store', 'store')->name('permission.store');
+            Route::get('/permission/edit/{id}', 'edit')->name('permission.edit');
+            Route::post('/permission/update/{id}', 'update')->name('permission.update');
             Route::delete('/permission/delete/{id}', 'destroy')->name('permission.delete');
         });
 

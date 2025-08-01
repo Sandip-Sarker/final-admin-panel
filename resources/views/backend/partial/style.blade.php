@@ -22,3 +22,5 @@
 <link href="{{asset('/')}}assets/css/progress.css" rel="stylesheet">
 
 <script src="{{asset('/')}}assets/js/axios.min.js"></script>
+<!-- Sweet Alert js -->
+<script src="{{asset('/')}}assets/js/sweetalert2@11"></script>

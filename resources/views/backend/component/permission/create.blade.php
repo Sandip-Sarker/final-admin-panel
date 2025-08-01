@@ -70,6 +70,39 @@
     <!-- End Row -->
 
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="createModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editPermissionForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Edit Permission</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">⨯</button>
+                    </div>
+
+                    <input type="hidden" id="editPermissionId" name="permission_id">
+
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Name<span class="text-danger">*</span></label>
+                            {{-- Fill existing title if available --}}
+                            <input name="name" id="editName" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" onclick="update()" class="btn btn-outline-primary">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         getUser();
@@ -135,6 +168,37 @@
                     }
                 });
             })
+
+            //edit
+            $('.editBtn').on('click', async function() {
+                let id = $(this).data('id')
+
+                $('#editPermissionId').val('id');
+
+                let res = await axios.get(`/admin/permission/edit/${id}`)
+
+                if (res.status === 200) {
+                    let permission = res.data.data; // ✅ Extract the actual permission object
+                    console.log('Permission Name:', permission.name); // ✅ Print the name
+
+                    $('#editName').val(permission.name); // ✅ Set it into input field
+                }
+
+               $('#editPermissionModal').modal('show');
+            });
+
+            //update
+            $('.editPermissionForm').on('submit', async function(event) {
+                event.preventDefault();
+
+                async function update() {
+                    let id = $('#editPermissionId').val()
+                    let name = $('#editName').val()
+                    console.log(id);
+                    console.log(name);
+
+                }
+            });
         }
     </script>
 
