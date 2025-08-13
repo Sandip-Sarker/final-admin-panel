@@ -48,7 +48,6 @@ class PermissionController extends Controller
 
     }
 
-
     public function edit($id)
     {
         $permission = Permission::find($id);
@@ -58,6 +57,25 @@ class PermissionController extends Controller
             return $this->errorResponse(false, 'Permission not found.', 404, []);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+
+        $permission = Permission::find($id);
+        if (!$permission) {
+            return $this->errorResponse(false, 'Permission not found.', 404, []);
+        }
+
+        $request->validate([
+            'name' => 'required|unique:permissions,name,' . $permission->id,
+        ]);
+
+        $permission->name = $request->input('name');
+        $permission->save();
+
+        return $this->successResponse(true, 'Permission updated successfully.', 200, $permission);
+    }
+
 
     public function destroy($id)
     {

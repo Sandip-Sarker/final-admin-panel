@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" onclick="update()" class="btn btn-outline-primary">Update</button>
+                        <button type="submit" class="btn btn-outline-primary">Update</button>
                     </div>
                 </div>
             </form>
@@ -103,7 +103,7 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         getUser();
 
@@ -177,27 +177,15 @@
 
                 let res = await axios.get(`/admin/permission/edit/${id}`)
 
-                if (res.status === 200) {
-                    let permission = res.data.data; // ✅ Extract the actual permission object
-                    console.log('Permission Name:', permission.name); // ✅ Print the name
 
-                    $('#editName').val(permission.name); // ✅ Set it into input field
+                if (res.status === 200) {
+                    let permission = res.data.data;
+
+                    $('#editName').val(permission.name);
+                    $('#editPermissionId').val(permission.id);
                 }
 
                $('#editPermissionModal').modal('show');
-            });
-
-            //update
-            $('.editPermissionForm').on('submit', async function(event) {
-                event.preventDefault();
-
-                async function update() {
-                    let id = $('#editPermissionId').val()
-                    let name = $('#editName').val()
-                    console.log(id);
-                    console.log(name);
-
-                }
             });
         }
     </script>
@@ -216,6 +204,7 @@
                 if (response.data.success === true && response.data.code === 200){
                     successToast('Permission Created Successfully');
                     this.reset();
+                    getUser();
                 }
                 else{
                     errorToast("Request fail !")
@@ -224,5 +213,33 @@
         });
     </script>
 
+{{--  Update data  --}}
+<script>
+    document.getElementById('editPermissionForm').addEventListener('submit', async function (event){
+        event.preventDefault();
+        let id      = $('#editPermissionId').val();
+        let name    = $('#editName').val();
 
+        if (name.length === 0) {
+            errorToast('Name is required');
+        } else {
+            try {
+                const res = await axios.post(`/admin/permission/update/${id}`, {
+                    name: name,
+                    _token: '{{ csrf_token() }}'
+                });
+                console.log(res);
+                if (res.status === 200) {
+                    successToast('Permission updated successfully');
+                    $('#editPermissionModal').modal('hide');
+                    getUser();
+
+                }
+            } catch (error) {
+                console.error(error);
+                errorToast('Update failed');
+            }
+        }
+    });
+</script>
 @endsection
