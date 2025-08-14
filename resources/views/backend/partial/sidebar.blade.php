@@ -47,7 +47,7 @@
                         <span class="side-menu__label">Role & Permission</span><i class="angle fa fa-angle-right"></i>
                     </a>
                     <ul class="slide-menu">
-                        <li><a href="form-elements.html" class="slide-item">Role</a></li>
+                        <li><a href="{{route('role.index')}}" class="slide-item">Role</a></li>
                         <li><a href="{{ route('permission.index') }}" class="slide-item">Permission</a></li>
                     </ul>
                 </li>

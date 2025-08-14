@@ -112,9 +112,10 @@
                 const response = await axios.get('/admin/permission/list');
                 // console.log(response)
                 let tableList = $('#tableList');
+                let data = response.data;
                 tableList.empty();
 
-                response.data.data.forEach(function (item, index) {
+                data.data.forEach(function (item, index) {
                     let row = `<tr>
                     <td>${index + 1}</td>
                     <td>${item.name}</td>
@@ -133,40 +134,20 @@
 
             //delete
             $('.deleteBtn').on('click', async function () {
-
                 let id = $(this).data('id')
 
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        try {
-                            let response = await axios.delete(`/admin/permission/delete/${id}`);
-                            console.log(response)
-                            if (response.data.success) {
-                                Swal.fire({
-                                    title: "Deleted!",
-                                    text: "The item has been deleted.",
-                                    icon: "success"
-                                }).then(() => {
-                                    // Optionally remove the row from table or reload
-                                     getUser() // or $(this).closest('tr').remove();
-                                });
-                            } else {
-                                Swal.fire("Error!", "Something went wrong.", "error");
-                            }
-                        } catch (error) {
-                            Swal.fire("Error!", "Deletion failed.", "error");
-                            console.error(error);
-                        }
+                try {
+                    let response = await axios.delete(`/admin/permission/delete/${id}`);
+                    let data = response.data;
+
+                    if (data.success === true && response.status === 200) {
+                        successToast('Permission Deleted Successfully');
+                        getUser();
                     }
-                });
+                } catch (error) {
+                    console.error(error);
+                }
+
             })
 
             //edit
@@ -190,6 +171,7 @@
         }
     </script>
 
+    {{--  Store data  --}}
     <script>
         {{-- Store Data --}}
         document.getElementById('permissionForm').addEventListener('submit', async function (event){
@@ -213,33 +195,33 @@
         });
     </script>
 
-{{--  Update data  --}}
-<script>
-    document.getElementById('editPermissionForm').addEventListener('submit', async function (event){
-        event.preventDefault();
-        let id      = $('#editPermissionId').val();
-        let name    = $('#editName').val();
+    {{--  Update data  --}}
+    <script>
+        document.getElementById('editPermissionForm').addEventListener('submit', async function (event){
+            event.preventDefault();
+            let id      = $('#editPermissionId').val();
+            let name    = $('#editName').val();
 
-        if (name.length === 0) {
-            errorToast('Name is required');
-        } else {
-            try {
-                const res = await axios.post(`/admin/permission/update/${id}`, {
-                    name: name,
-                    _token: '{{ csrf_token() }}'
-                });
-                console.log(res);
-                if (res.status === 200) {
-                    successToast('Permission updated successfully');
-                    $('#editPermissionModal').modal('hide');
-                    getUser();
+            if (name.length === 0) {
+                errorToast('Name is required');
+            } else {
+                try {
+                    const res = await axios.post(`/admin/permission/update/${id}`, {
+                        name: name,
+                        _token: '{{ csrf_token() }}'
+                    });
+                    console.log(res);
+                    if (res.status === 200) {
+                        successToast('Permission updated successfully');
+                        $('#editPermissionModal').modal('hide');
+                        getUser();
 
+                    }
+                } catch (error) {
+                    console.error(error);
+                    errorToast('Update failed');
                 }
-            } catch (error) {
-                console.error(error);
-                errorToast('Update failed');
             }
-        }
-    });
-</script>
+        });
+    </script>
 @endsection

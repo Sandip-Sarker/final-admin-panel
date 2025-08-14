@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Role\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\Home\DashboardController;
@@ -23,6 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/permission/update/{id}', 'update')->name('permission.update');
             Route::delete('/permission/delete/{id}', 'destroy')->name('permission.delete');
         });
+
+        Route::resource('/role', RoleController::class);
 
     });
 });
