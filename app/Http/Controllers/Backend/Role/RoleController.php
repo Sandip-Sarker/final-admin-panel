@@ -18,6 +18,18 @@ class RoleController extends Controller
         return view('backend.component.role.create')->with('title');
     }
 
+    public function roleGetList()
+    {
+
+        $roles = Role::all();
+
+        if ($roles->count() > 0) {
+            return $this->successResponse('Permission Get successfully.', 200, $roles);
+        } else {
+            return $this->errorResponse( 'Permission not found.', 200, null);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.

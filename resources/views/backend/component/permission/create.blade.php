@@ -110,7 +110,7 @@
         async function getUser() {
             try {
                 const response = await axios.get('/admin/permission/list');
-                // console.log(response)
+                console.log(response)
                 let tableList = $('#tableList');
                 let data = response.data;
                 tableList.empty();

@@ -68,6 +68,7 @@
     <!-- End Row -->
 
 
+
     <!-- Edit Modal -->
     <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="createModalLabel"
          aria-hidden="true">
@@ -105,7 +106,29 @@
 
 @push('scripts')
 
+    {{-- Get Role --}}
+    <script>
+          getRoles();
 
+          async function getRoles(){
+              let response  = await axios.get("{{ route('role.list') }}");
+              let data      = response.data;
+              let tableList = $('#tableList')
+
+              data.data.forEach(function (item, index) {
+                  let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>
+                        <button data-id="${item.id}" class="btn editBtn btn-sm btn-outline-success">Edit</button>
+                        <button data-id="${item.id}" class="btn deleteBtn btn-sm btn-outline-danger">Delete</button>
+                    </td>
+                </tr>`;
+                  tableList.append(row);
+              });
+          }
+
+    </script>
 
     {{--  Store  --}}
     <script>

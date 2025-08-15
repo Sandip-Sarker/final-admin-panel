@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        // Permission
         Route::controller(PermissionController::class)->group(function () {
             Route::get('/permission', 'index')->name('permission.index');
             Route::get('/permission/list', 'permissionList')->name('permission.list');
@@ -25,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/permission/delete/{id}', 'destroy')->name('permission.delete');
         });
 
+        // Role
+        Route::get('/role/list', [RoleController::class, 'roleGetList'])->name('role.list');
         Route::resource('/role', RoleController::class);
 
     });
