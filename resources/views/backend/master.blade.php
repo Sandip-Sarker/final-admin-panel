@@ -56,6 +56,7 @@
 
     @include('backend.partial.script')
 
+    @stack('scripts')
 
 </body>
 </html>

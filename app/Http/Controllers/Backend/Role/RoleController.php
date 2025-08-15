@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Backend\Role;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Role\RoleRequest;
+use App\Trait\response;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use response;
+
     public function index()
     {
         $data['title'] = 'Roles';
@@ -23,7 +24,16 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        dd($request->all());
+        $role       = new Role();
+        $role->name = $request->input('name');
+        $role->save();
+
+        if ($role) {
+            return $this->successResponse('Role created successfully',200, $role);
+        }else {
+            return $this->errorResponse('Role not created', 500, []);
+        }
+
     }
 
     /**

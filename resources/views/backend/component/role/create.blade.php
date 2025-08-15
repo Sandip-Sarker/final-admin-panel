@@ -52,13 +52,13 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-column">
-                        <form id="permissionForm">
+                        <form id="roleForm">
                             <div class="form-group">
                                 <label>Name<span class="text-danger">*</span></label>
                                 <input class="form-control" name="name" id="name" placeholder="Enter Role Name" type="text">
                             </div>
 
-                            <button type="submit" class="btn addBtn btn-outline-primary w-100">Save</button>
+                            <button type="button" class="btn addBtn btn-outline-primary w-100">Save</button>
                         </form>
                     </div>
                 </div>
@@ -100,13 +100,34 @@
         </div>
     </div>
 
+
+@endsection
+
+@push('scripts')
+
+
+
+    {{--  Store  --}}
     <script>
         $(document).ready(function () {
-            $('#permissionForm').on('submit', async function(event) {
-                event.preventDefault();
-                alert('hi');
+            $('.addBtn').on('click', async function () {
+                let name = $('#name').val();
+
+                if (name.length === 0){
+                    errorToast('Name is required');
+                }else {
+                    let response = await axios.post("{{route('role.store')}}", {name:name})
+                    let data = response.data;
+
+                    if (data.success === true && data.code === 200){
+                        successToast(data.message);
+                        ('#roleForm').reset();
+                    }else {
+                        errorToast(data.message);
+                    }
+                }
             });
         });
-
     </script>
-@endsection
+@endpush
+
