@@ -110,10 +110,17 @@
     <script>
           getRoles();
 
-          async function getRoles(){
+          async function getRoles() {
               let response  = await axios.get("{{ route('role.list') }}");
               let data      = response.data;
-              let tableList = $('#tableList')
+
+              // Destroy old instance if exists
+              if ($.fn.DataTable.isDataTable('#tableData')) {
+                  $('#tableData').DataTable().clear().destroy();
+              }
+
+              let tableList = $('#tableList');
+              tableList.empty();
 
               data.data.forEach(function (item, index) {
                   let row = `<tr>
@@ -125,6 +132,16 @@
                     </td>
                 </tr>`;
                   tableList.append(row);
+              });
+
+              // Reinitialize DataTable
+              $('#tableData').DataTable({
+                  responsive: true,
+                  //dom: 'Bfrtip',
+                  //buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                  pageLength: 10,
+                  lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+                  autoWidth: false
               });
           }
 
@@ -139,17 +156,19 @@
                 if (name.length === 0){
                     errorToast('Name is required');
                 }else {
-                    let response = await axios.post("{{route('role.store')}}", {name:name})
-                    let data = response.data;
+                    let response    = await axios.post("{{route('role.store')}}", {name:name})
+                    let data        = response.data;
 
                     if (data.success === true && data.code === 200){
                         successToast(data.message);
+                        getRoles();
                         ('#roleForm').reset();
                     }else {
                         errorToast(data.message);
                     }
                 }
             });
+
         });
     </script>
 @endpush

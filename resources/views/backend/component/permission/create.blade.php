@@ -113,6 +113,12 @@
                 console.log(response)
                 let tableList = $('#tableList');
                 let data = response.data;
+
+                // Destroy old instance if exists
+                if ($.fn.DataTable.isDataTable('#tableData')) {
+                    $('#tableData').DataTable().clear().destroy();
+                }
+
                 tableList.empty();
 
                 data.data.forEach(function (item, index) {
@@ -127,6 +133,15 @@
                     tableList.append(row);
                 });
 
+                // Reinitialize DataTable
+                $('#tableData').DataTable({
+                    responsive: true,
+                    //dom: 'Bfrtip',
+                    //buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                    pageLength: 10,
+                    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+                    autoWidth: false
+                });
             } catch (error) {
                 console.error("Axios error:", error);
             }
