@@ -72,7 +72,7 @@
     <!-- Edit Modal -->
     <div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="editPermissionForm">
+            <form id="editRoleForm">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -165,6 +165,27 @@
 
                 $('#editRoleModal').modal('show');
             });
+
+
+            // delete role
+            $(document).on('click', '.deleteBtn', async function() {
+                let id = $(this).data('id');
+                try {
+                    let response = await axios.delete(`/admin/role/${id}`);
+                    let data = response.data;
+
+                    if (data.success === true) {
+                        successToast('Role deleted successfully');
+                        getRoles(); // ✅ correct function name
+                    } else {
+                        errorToast(data.message || 'Delete failed');
+                    }
+                } catch (error) {
+                    console.error("Delete error:", error);
+                    errorToast('Something went wrong');
+                }
+            });
+
         }
     </script>
 
@@ -192,6 +213,41 @@
                 }
             });
 
+        });
+    </script>
+
+    {{--  Update  --}}
+    <script>
+        document.getElementById('editRoleForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let id = $('#editRoleId').val();
+            let name = $('#editName').val();
+
+            if (name.trim().length === 0) {
+                errorToast('Name is required');
+                return;
+            }
+
+            try {
+                const res = await axios.put(`/admin/role/${id}`, {
+                    name: name,
+                    _token: '{{ csrf_token() }}'
+                });
+
+                console.log(res);
+
+                if (res.data.success === true) {
+                    successToast('Role updated successfully');
+                    $('#editRoleModal').modal('hide');
+                    getRoles(); // ✅ function name fixed from getUser() to getRoles()
+                } else {
+                    errorToast(res.data.message || 'Update failed');
+                }
+            } catch (error) {
+                console.error("Axios Error:", error);
+                errorToast('Update failed');
+            }
         });
     </script>
 @endpush

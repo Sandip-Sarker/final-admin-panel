@@ -83,7 +83,28 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $role = Role::find($id);
+
+        if (!$role) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Role not found.',
+                'data' => []
+            ], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|unique:roles,name,' . $role->id,
+        ]);
+
+        $role->name = $request->input('name');
+        $role->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Role updated successfully.',
+            'data' => $role
+        ], 200);
     }
 
     /**
@@ -91,6 +112,11 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Deleted successfully.',
+        ]);
     }
 }
