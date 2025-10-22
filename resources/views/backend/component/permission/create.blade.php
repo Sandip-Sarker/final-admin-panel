@@ -1,7 +1,6 @@
 @extends('backend.master')
 
 @section('main-content')
-
     <!-- PAGE-HEADER -->
     <div class="page-header">
         <div>
@@ -27,15 +26,15 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive deleted-table">
-{{--                        <button id="button" class="btn btn-primary float-end mb-4 data-table-btn">Delete selected row</button>--}}
-{{--                        <table id="delete-datatable" class="table table-bordered text-nowrap border-bottom">--}}
+                        {{--                        <button id="button" class="btn btn-primary float-end mb-4 data-table-btn">Delete selected row</button> --}}
+                        {{--                        <table id="delete-datatable" class="table table-bordered text-nowrap border-bottom"> --}}
                         <table class="table table-bordered text-nowrap border-bottom" id="tableData">
                             <thead>
-                            <tr>
-                                <th class="border-bottom-0">SL NO</th>
-                                <th class="border-bottom-0">Name</th>
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
+                                <tr>
+                                    <th class="border-bottom-0">SL NO</th>
+                                    <th class="border-bottom-0">Name</th>
+                                    <th class="border-bottom-0">Action</th>
+                                </tr>
                             </thead>
                             <tbody id="tableList">
 
@@ -57,7 +56,8 @@
                         <form id="permissionForm">
                             <div class="form-group">
                                 <label>Name<span class="text-danger">*</span></label>
-                                <input class="form-control" name="name" id="name" placeholder="Enter Permission Name" type="text">
+                                <input class="form-control" name="name" id="name"
+                                    placeholder="Enter Permission Name" type="text">
                             </div>
 
                             <button type="submit" class="btn addBtn btn-outline-primary w-100">Save</button>
@@ -71,16 +71,14 @@
 
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="createModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form id="editPermissionForm">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">Edit Permission</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">⨯</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">⨯</button>
                     </div>
 
                     <input type="hidden" id="editPermissionId" name="permission_id">
@@ -101,9 +99,9 @@
             </form>
         </div>
     </div>
+@endsection
 
-
-
+@push('scripts')
     <script>
         getUser();
 
@@ -121,7 +119,7 @@
 
                 tableList.empty();
 
-                data.data.forEach(function (item, index) {
+                data.data.forEach(function(item, index) {
                     let row = `<tr>
                     <td>${index + 1}</td>
                     <td>${item.name}</td>
@@ -139,7 +137,10 @@
                     //dom: 'Bfrtip',
                     //buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                     pageLength: 10,
-                    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, "All"]
+                    ],
                     autoWidth: false
                 });
             } catch (error) {
@@ -148,7 +149,7 @@
 
 
             //delete
-            $('.deleteBtn').on('click', async function () {
+            $('.deleteBtn').on('click', async function() {
                 let id = $(this).data('id')
 
                 try {
@@ -181,7 +182,7 @@
                     $('#editPermissionId').val(permission.id);
                 }
 
-               $('#editPermissionModal').modal('show');
+                $('#editPermissionModal').modal('show');
             });
         }
     </script>
@@ -189,21 +190,22 @@
     {{--  Store data  --}}
     <script>
         {{-- Store Data --}}
-        document.getElementById('permissionForm').addEventListener('submit', async function (event){
+        document.getElementById('permissionForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             let name = $('#name').val().trim();
 
-            if (name.length === 0){
+            if (name.length === 0) {
                 errorToast('Name is required');
-            }else{
-                let response  = await axios.post("permission/store",{name:name})
-                if (response.data.success === true && response.data.code === 200){
+            } else {
+                let response = await axios.post("permission/store", {
+                    name: name
+                })
+                if (response.data.success === true && response.data.code === 200) {
                     successToast('Permission Created Successfully');
                     this.reset();
                     getUser();
-                }
-                else{
+                } else {
                     errorToast("Request fail !")
                 }
             }
@@ -212,10 +214,10 @@
 
     {{--  Update data  --}}
     <script>
-        document.getElementById('editPermissionForm').addEventListener('submit', async function (event){
+        document.getElementById('editPermissionForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            let id      = $('#editPermissionId').val();
-            let name    = $('#editName').val();
+            let id = $('#editPermissionId').val();
+            let name = $('#editName').val();
 
             if (name.length === 0) {
                 errorToast('Name is required');
@@ -239,4 +241,4 @@
             }
         });
     </script>
-@endsection
+@endpush

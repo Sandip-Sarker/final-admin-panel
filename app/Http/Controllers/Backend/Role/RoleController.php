@@ -26,7 +26,7 @@ class RoleController extends Controller
         if ($roles->count() > 0) {
             return $this->successResponse('Permission Get successfully.', 200, $roles);
         } else {
-            return $this->errorResponse( 'Permission not found.', 200, null);
+            return $this->errorResponse('Permission not found.', 200, null);
         }
     }
 
@@ -41,11 +41,10 @@ class RoleController extends Controller
         $role->save();
 
         if ($role) {
-            return $this->successResponse('Role created successfully',200, $role);
-        }else {
+            return $this->successResponse('Role created successfully', 200, $role);
+        } else {
             return $this->errorResponse('Role not created', 500, []);
         }
-
     }
 
     /**
@@ -61,8 +60,23 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::find($id);
+
+        if ($role) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Role retrieved successfully.',
+                'data' => $role
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Role not found.',
+            'data' => []
+        ], 404);
     }
+
 
     /**
      * Update the specified resource in storage.

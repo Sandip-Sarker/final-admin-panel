@@ -1,11 +1,10 @@
 @extends('backend.master')
 
 @section('main-content')
-
     <!-- PAGE-HEADER -->
     <div class="page-header">
         <div>
-            <h1 class="page-title">Permission</h1>
+            <h1 class="page-title">Role</h1>
         </div>
         <div class="ms-auto pageheader-btn">
             <ol class="breadcrumb">
@@ -29,11 +28,11 @@
                     <div class="table-responsive deleted-table">
                         <table class="table table-bordered text-nowrap border-bottom" id="tableData">
                             <thead>
-                            <tr>
-                                <th class="border-bottom-0">SL NO</th>
-                                <th class="border-bottom-0">Name</th>
-                                <th class="border-bottom-0">Action</th>
-                            </tr>
+                                <tr>
+                                    <th class="border-bottom-0">SL NO</th>
+                                    <th class="border-bottom-0">Name</th>
+                                    <th class="border-bottom-0">Action</th>
+                                </tr>
                             </thead>
                             <tbody id="tableList">
 
@@ -55,7 +54,8 @@
                         <form id="roleForm">
                             <div class="form-group">
                                 <label>Name<span class="text-danger">*</span></label>
-                                <input class="form-control" name="name" id="name" placeholder="Enter Role Name" type="text">
+                                <input class="form-control" name="name" id="name" placeholder="Enter Role Name"
+                                    type="text">
                             </div>
 
                             <button type="button" class="btn addBtn btn-outline-primary w-100">Save</button>
@@ -70,19 +70,17 @@
 
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-labelledby="createModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form id="editPermissionForm">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">Edit Role</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">⨯</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">⨯</button>
                     </div>
 
-                    <input type="hidden" id="editPermissionId" name="permission_id">
+                    <input type="hidden" id="editRoleId" name="role_id">
 
 
                     <div class="modal-body">
@@ -100,30 +98,28 @@
             </form>
         </div>
     </div>
-
-
 @endsection
 
 @push('scripts')
-
     {{-- Get Role --}}
     <script>
-          getRoles();
+        getRoles();
 
-          async function getRoles() {
-              let response  = await axios.get("{{ route('role.list') }}");
-              let data      = response.data;
+        async function getRoles() {
+            try {
+                let response = await axios.get("{{ route('role.list') }}");
+                let data = response.data;
 
-              // Destroy old instance if exists
-              if ($.fn.DataTable.isDataTable('#tableData')) {
-                  $('#tableData').DataTable().clear().destroy();
-              }
+                // Destroy old instance if exists
+                if ($.fn.DataTable.isDataTable('#tableData')) {
+                    $('#tableData').DataTable().clear().destroy();
+                }
 
-              let tableList = $('#tableList');
-              tableList.empty();
+                let tableList = $('#tableList');
+                tableList.empty();
 
-              data.data.forEach(function (item, index) {
-                  let row = `<tr>
+                data.data.forEach(function(item, index) {
+                    let row = `<tr>
                     <td>${index + 1}</td>
                     <td>${item.name}</td>
                     <td>
@@ -131,39 +127,66 @@
                         <button data-id="${item.id}" class="btn deleteBtn btn-sm btn-outline-danger">Delete</button>
                     </td>
                 </tr>`;
-                  tableList.append(row);
-              });
+                    tableList.append(row);
+                });
 
-              // Reinitialize DataTable
-              $('#tableData').DataTable({
-                  responsive: true,
-                  //dom: 'Bfrtip',
-                  //buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-                  pageLength: 10,
-                  lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-                  autoWidth: false
-              });
-          }
+                // Reinitialize DataTable
+                $('#tableData').DataTable({
+                    responsive: true,
+                    //dom: 'Bfrtip',
+                    //buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                    pageLength: 10,
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, "All"]
+                    ],
+                    autoWidth: false
+                });
+            } catch (error) {
+                console.error("Axios error:", error);
+            }
 
+
+            //edit
+            $('.editBtn').on('click', async function() {
+                let id = $(this).data('id')
+
+                $('#editRoleId').val('id');
+
+                let res = await axios.get(`/admin/role/${id}/edit`)
+                let data = res.data
+                // console.log(data)
+                if (data.success === true) {
+                    let role = data.data;
+
+                    $('#editName').val(role.name);
+                    $('#editRoleId').val(role.id);
+                }
+
+                $('#editRoleModal').modal('show');
+            });
+        }
     </script>
 
     {{--  Store  --}}
     <script>
-        $(document).ready(function () {
-            $('.addBtn').on('click', async function () {
+        $(document).ready(function() {
+            $('.addBtn').on('click', async function() {
                 let name = $('#name').val();
 
-                if (name.length === 0){
+                if (name.length === 0) {
                     errorToast('Name is required');
-                }else {
-                    let response    = await axios.post("{{route('role.store')}}", {name:name})
-                    let data        = response.data;
+                } else {
+                    let response = await axios.post("{{ route('role.store') }}", {
+                        name: name
+                    })
+                    let data = response.data;
 
-                    if (data.success === true && data.code === 200){
+                    if (data.success === true && data.code === 200) {
                         successToast(data.message);
                         getRoles();
                         ('#roleForm').reset();
-                    }else {
+                    } else {
                         errorToast(data.message);
                     }
                 }
@@ -172,4 +195,3 @@
         });
     </script>
 @endpush
-
